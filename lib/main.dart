@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:my_first_app/screens/login.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:my_first_app/screens/signup.dart';
+import 'package:my_first_app/utils/routes.dart';
+import 'screens/homepage.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
+
 }
 
 class MyApp extends StatelessWidget {
@@ -11,66 +17,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
+
+      themeMode: ThemeMode.light,
       theme: ThemeData(
-       
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        
-        title: Text("This sis my first flutter"),
-      ),
-      body:Center(
-        child:  Container(
-        width: 300,
-        height: 250,
-        color:Colors.cyanAccent,
-        child: Center(child: Text('Hello Ayush, I love you!',style: TextStyle(color: Colors.deepOrangeAccent,fontSize: 20))),
-        
-      )
-      ),
+        primarySwatch: Colors.amber,
+        fontFamily: GoogleFonts.lato().fontFamily
+        ),
       
-    );
+      darkTheme:ThemeData(brightness:Brightness.light),
+      routes: {
+        Myroutes.loginpage:(context)=> login_Page(),
+        Myroutes.homepage:(context)=> Home_Page(),
+        Myroutes.siup:(context) => signup()        
+        
+      },
+      );
+
+
   }
 }
