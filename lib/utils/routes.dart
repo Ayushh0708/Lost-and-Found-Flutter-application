@@ -1,5 +1,5 @@
 class Myroutes{
-    static String loginpage="/";
+    static String loginpage="/login";
     static String homepage="/home";
     static String siup="/signup";
 }

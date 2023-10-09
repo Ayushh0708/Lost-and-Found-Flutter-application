@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:my_first_app/screens/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_first_app/screens/signup.dart';
+import 'package:my_first_app/splash.dart';
 import 'package:my_first_app/utils/routes.dart';
-import 'screens/homepage.dart';
+import 'package:my_first_app/screens/homepage.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,9 +24,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.amber,
         fontFamily: GoogleFonts.lato().fontFamily
         ),
-      
+      home: SplashScreen(),
       darkTheme:ThemeData(brightness:Brightness.light),
       routes: {
+
         Myroutes.loginpage:(context)=> login_Page(),
         Myroutes.homepage:(context)=> Home_Page(),
         Myroutes.siup:(context) => signup()        

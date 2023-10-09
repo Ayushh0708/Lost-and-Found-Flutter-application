@@ -1,7 +1,11 @@
 import "package:flutter/material.dart";
+import 'package:my_first_app/screens/homepage.dart';
+import 'package:my_first_app/splash.dart';
 import 'package:my_first_app/utils/routes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class login_Page extends StatefulWidget {
   @override
@@ -14,54 +18,51 @@ class _login_PageState extends State<login_Page> {
 
   String name = "";
   bool changeBut = false;
+  bool authentication = false;
 
   final _formkey = GlobalKey<FormState>();
   final apiUrl = Uri.parse('https://lost-found-rho.vercel.app/user/login');
 
-  
-  Future<void> loginUser(String username, String password) async {
-    try {
-      final data = {
-        'username': username,
-        'password': password,
-      };
+  moveToHome(BuildContext context, String username, String password) async {
+    if (_formkey.currentState!.validate()) {
+      try {
+        final data = {
+          'username': username,
+          'password': password,
+        };
 
-      final response = await http.post(
-        apiUrl,
-        body: data,
-      );
+        final response = await http.post(
+          apiUrl,
+          body: data,
+        );
         print('Response: ${response.body}');
         var body = json.decode(response.body);
-        if(body['status'] == true){
+        if (body['status'] == true) {
           // success
           var name = body['user']['name'];
           var token = body['user']['token'];
 
-          print("Name: ${name}\ntoken: ${token}");
+          //sharedPreference Code
+          var sharedPref=await SharedPreferences.getInstance();
+          sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
 
-        }else{
+
+          print("Name: ${name}\ntoken: ${token}");
+          setState(() {
+            changeBut = true;
+          });
+          await Future.delayed(Duration(seconds: 1));
+          await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
+          Home_Page(),));
+        } else {
           // auth failed
           print("auth failed");
         }
-
-    } catch (e) {
+      } catch (e) {
         // auth failed
         print("auth failed !!");
         print(e);
-    }
-    
-  }
-  
-  moveToHome(BuildContext context) async {
-    if (_formkey.currentState!.validate()) {
-      setState(() {
-        changeBut = true;
-      });
-      await Future.delayed(Duration(seconds: 1));
-      await Navigator.pushNamed(context, Myroutes.homepage);
-      setState(() {
-        changeBut = false;
-      });
+      }
     }
   }
 
@@ -117,8 +118,8 @@ class _login_PageState extends State<login_Page> {
                   validator: (value) {
                     if (value!.isEmpty) {
                       return ("Password Can't be Empty");
-                    } else if (value.length < 6) {
-                      return "Password length can't be less than 6";
+                    } else if (value.length < 5) {
+                      return "Password length can't be less than 5";
                     }
                     return null;
                   },
@@ -126,7 +127,7 @@ class _login_PageState extends State<login_Page> {
                 SizedBox(height: 30),
                 InkWell(
                   onTap: () {
-                    loginUser(usernameText.text, passwordText.text);
+                    moveToHome(context, usernameText.text, passwordText.text);
                   },
                   child: AnimatedContainer(
                       duration: Duration(seconds: 1),
