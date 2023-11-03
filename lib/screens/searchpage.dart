@@ -34,6 +34,7 @@ class _Search_PageState extends State<Search_Page> {
 
     if (response.statusCode == 200) {
       var body = json.decode(response.body);
+      // print(body);
       if (body['status'] == true) {
         body['items'].forEach((item) => {items.add(item)});
 
@@ -46,9 +47,9 @@ class _Search_PageState extends State<Search_Page> {
   }
   @override
   void initState(){
-    query = ModalRoute.of(context)!.settings.arguments as String;
-    getItems();
     super.initState();
+    // query = ModalRoute.of(context)!.settings.arguments as String;
+    getItems();
   }
 
   @override
