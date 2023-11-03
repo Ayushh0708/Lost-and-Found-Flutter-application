@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_first_app/screens/homepage.dart';
 import 'package:my_first_app/screens/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   State<SplashScreen> createState() => SplashScreenState();
 }
@@ -30,7 +31,7 @@ class SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         color: Colors.amberAccent[300],
-        child: Center(
+        child: const Center(
           child: Text(
             'Lost And found',
             style: TextStyle(
@@ -49,7 +50,7 @@ class SplashScreenState extends State<SplashScreen> {
     var isLoggedIn =sharedPref.getBool(KEYLOGIN);
 
 
-    Timer(Duration(seconds: 2), () {
+    Timer(const Duration(seconds: 2), () {
       if(isLoggedIn != null){
         if(isLoggedIn){
           Navigator.pushReplacement(
@@ -61,14 +62,14 @@ class SplashScreenState extends State<SplashScreen> {
           Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => login_Page(),
+            builder: (context) => const login_Page(),
           ));
         }
       }else{
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => login_Page(),
+            builder: (context) => const login_Page(),
           ));
       }
 

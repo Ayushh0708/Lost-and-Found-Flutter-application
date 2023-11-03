@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:my_first_app/screens/homepage.dart';
 import 'package:my_first_app/splash.dart';
+import 'package:my_first_app/utils/globals.dart';
 import 'package:my_first_app/utils/routes.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -8,6 +9,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class login_Page extends StatefulWidget {
+  const login_Page({super.key});
+
   @override
   State<login_Page> createState() => _login_PageState();
 }
@@ -21,7 +24,7 @@ class _login_PageState extends State<login_Page> {
   bool authentication = false;
 
   final _formkey = GlobalKey<FormState>();
-  final apiUrl = Uri.parse('https://lost-found-rho.vercel.app/user/login');
+  final Uri apiUrl = Uri.parse("${GlobalValues.API_URL}/user/login");
 
   moveToHome(BuildContext context, String username, String password) async {
     if (_formkey.currentState!.validate()) {
@@ -35,7 +38,6 @@ class _login_PageState extends State<login_Page> {
           apiUrl,
           body: data,
         );
-        print('Response: ${response.body}');
         var body = json.decode(response.body);
         if (body['status'] == true) {
           // success
@@ -44,14 +46,14 @@ class _login_PageState extends State<login_Page> {
 
           //sharedPreference Code
           var sharedPref=await SharedPreferences.getInstance();
-          sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
+          sharedPref.setString("name",name);
+          sharedPref.setString("token",token);
 
-
-          print("Name: ${name}\ntoken: ${token}");
+          print("Name: $name\ntoken: $token");
           setState(() {
             changeBut = true;
           });
-          await Future.delayed(Duration(seconds: 1));
+          await Future.delayed(const Duration(seconds: 1));
           await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>
           Home_Page(),));
         } else {
@@ -75,14 +77,14 @@ class _login_PageState extends State<login_Page> {
         key: _formkey,
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 40,
             ),
-            Text(
+            const Text(
               "UPES",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            Text(
+            const Text(
               "Lost & Found",
               style: TextStyle(fontSize: 10, fontStyle: FontStyle.italic),
             ),
@@ -90,13 +92,13 @@ class _login_PageState extends State<login_Page> {
                 fit: BoxFit.cover, height: 220),
             Text(
               "Welcome $name",
-              style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+              style: const TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(children: [
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: "Enter Username", labelText: "Username"),
                   controller: usernameText,
                   validator: (value) {
@@ -112,7 +114,7 @@ class _login_PageState extends State<login_Page> {
                 ),
                 TextFormField(
                   obscureText: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       hintText: "Enter Password", labelText: "Password"),
                   controller: passwordText,
                   validator: (value) {
@@ -124,37 +126,37 @@ class _login_PageState extends State<login_Page> {
                     return null;
                   },
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 InkWell(
                   onTap: () {
                     moveToHome(context, usernameText.text, passwordText.text);
                   },
                   child: AnimatedContainer(
-                      duration: Duration(seconds: 1),
+                      duration: const Duration(seconds: 1),
                       width: changeBut ? 70 : 150,
                       height: 50,
                       alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 107, 128, 244),
+                          borderRadius: BorderRadius.circular(7)),
                       child: changeBut
-                          ? Icon(
+                          ? const Icon(
                               Icons.done,
                               color: Colors.white,
                             )
-                          : Text("Login",
+                          : const Text("Login",
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 18)),
-                      decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 107, 128, 244),
-                          borderRadius: BorderRadius.circular(7))
+                                  TextStyle(color: Colors.white, fontSize: 18))
                       // onPressed:(){},
 
                       ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 GestureDetector(
-                  child: Text("Don't have an account?"),
+                  child: const Text("Don't have an account?"),
                   onTap: () {
                     setState(() {});
-                    Navigator.pushNamed(context, Myroutes.siup);
+                    Navigator.pushNamed(context, Myroutes.signup);
                   },
                 )
               ]),

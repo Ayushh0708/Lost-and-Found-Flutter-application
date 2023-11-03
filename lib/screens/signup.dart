@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:my_first_app/utils/routes.dart';
 
 class signup extends StatefulWidget{
+  const signup({super.key});
+
   @override
   State<signup> createState() => _signupState();
 }
@@ -17,7 +19,7 @@ class _signupState extends State<signup> {
     setState(() {
       changeBut=true;
       });
-      await Future.delayed(Duration(seconds: 1)); 
+      await Future.delayed(const Duration(seconds: 1)); 
       await Navigator.pushNamed(context, Myroutes.homepage);
       setState(() {
         changeBut=false;
@@ -28,7 +30,7 @@ class _signupState extends State<signup> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign UP"),
+        title: const Text("Sign UP"),
         backgroundColor: const Color.fromARGB(255, 8, 60, 150),
         
         
@@ -38,7 +40,7 @@ class _signupState extends State<signup> {
           key: _formkey,
           child: Column(
           children: [
-            SizedBox(height: 200,),
+            const SizedBox(height: 200,),
                    
         
         
@@ -46,7 +48,7 @@ class _signupState extends State<signup> {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children:[TextFormField(
-                decoration: InputDecoration(hintText: "Enter Phone Number",labelText: "Phone Number"),
+                decoration: const InputDecoration(hintText: "Enter Phone Number",labelText: "Phone Number"),
                 validator: (value) {
                   if(value!.isEmpty){
                     return "You have to provide your Phone Number";
@@ -63,7 +65,7 @@ class _signupState extends State<signup> {
               ),
    
                 TextFormField(
-                decoration: InputDecoration(hintText: "Enter Username",labelText: "Username"),
+                decoration: const InputDecoration(hintText: "Enter Username",labelText: "Username"),
                 validator: (value) {
                   if(value!.isEmpty){
                     return "Username can't be Empty";
@@ -78,7 +80,7 @@ class _signupState extends State<signup> {
 
               TextFormField(
                 obscureText: true,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: "Enter Password",
                 labelText: "Password"),
 
@@ -93,28 +95,28 @@ class _signupState extends State<signup> {
                 },
               ),
               
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               
               InkWell(
                 onTap: ()=>moveToHome(context),
                 child: AnimatedContainer(
-                  duration: Duration(seconds: 1),
+                  duration: const Duration(seconds: 1),
                     width:changeBut? 70 : 150,
                     height: 50,
                     alignment: Alignment.center,
                     
+                    decoration:BoxDecoration(
+                      color :const Color.fromARGB(255, 107, 128, 244),
+                      borderRadius: BorderRadius.circular(7)
+                             
+                    ),
+                    
                     child:changeBut
-                    ?Icon(
+                    ?const Icon(
                       Icons.done,
                       color: Colors.white,
                      )
-                     :Text("Sign Up",style: TextStyle(color: Colors.white,fontSize: 18)),
-                    
-                    decoration:BoxDecoration(
-                      color :Color.fromARGB(255, 107, 128, 244),
-                      borderRadius: BorderRadius.circular(7)
-                             
-                    )
+                     :const Text("Sign Up",style: TextStyle(color: Colors.white,fontSize: 18))
              
                 ),
               ), 

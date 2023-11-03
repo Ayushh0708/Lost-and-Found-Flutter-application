@@ -1,38 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:my_first_app/screens/searchpage.dart';
+import 'package:my_first_app/utils/globals.dart';
+import 'package:my_first_app/utils/routes.dart';
+import 'dart:convert';
 
-class Home_Page extends StatelessWidget{
-  List pics=["https://theawesomedaily.com/wp-content/uploads/2017/01/random-pictures-that-make-no-sense-1.jpeg",
-             "https://i.pinimg.com/originals/59/69/5a/59695afcbea919b65a8d43e995e0a754--funny-things-funny-stuff.jpg",
-             "https://i.pinimg.com/originals/b7/8f/4a/b78f4a1823e9bee8c6bbf963116b0924.jpg",
-             "https://i.pinimg.com/originals/dd/fa/ac/ddfaac7c0f4c680466a0598c51427ea4.jpg",
-             "https://i.pinimg.com/originals/75/b5/f4/75b5f40a2d4319f1f9a8fe8655108106--funny-babies-cute-babies.jpg",
-             "https://i.pinimg.com/originals/c6/8c/13/c68c13dbe397b234141ecc17a3785ef2--funny-dogs-funny-animals.jpg",];
+import 'package:shared_preferences/shared_preferences.dart';
+
+
+class Home_Page extends StatefulWidget{
+  Home_Page({super.key});
+
+  @override
+  State<Home_Page> createState() => _Home_PageState();
+}
+
+class _Home_PageState extends State<Home_Page> {
+  String token = "";
+  String username = "";
+  List categories = [];
+
+  Future apiCall() async{
+    http.Response response;
+    response = await http.get(
+      Uri.parse("${GlobalValues.API_URL}/category/")
+    );
+    if(response.statusCode == 200){
+      var body = json.decode(response.body);
+      if(body['status'] == true){
+        setState(() {
+          categories = body['categories'];
+        });
+      }
+    }
+  }
+
+  void ItemTapCallback(BuildContext ctx,String name) async {
+   Navigator.pushNamed(ctx, Myroutes.searchpage,arguments: name);
+  }
+
+  @override
+  void initState(){
+    apiCall();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lost&Found"),
+        title: const Text("Lost&Found"),
         backgroundColor: const Color.fromARGB(255, 8, 60, 150),
-        
-        
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: ListView.builder(itemBuilder: (BuildContext ctx ,int index ){
-            return Image.network(pics[index]);
-        },itemCount: pics.length,
-        ),
+        child: ListView.custom(childrenDelegate: SliverChildBuilderDelegate(
+          (BuildContext context,int index){
+            return GestureDetector(
+              child: Card(
+                color: Colors.lightBlueAccent,
+                 child: Padding(
+                  child: Text(categories[index]['name']),
+                  padding: EdgeInsets.all(50),
+                 ),
+              ),
+              onTap: (){
+                ItemTapCallback(context,categories[index]['name']);
+                // print('Tapped on category #$index: ${categories[index]}');
+              },
+            );
+          },
+          childCount: categories.length
+        ))
       ),
 
 
 
 
 
-      drawer: Drawer(),
+      drawer: const Drawer(),
       
     );
   }
-
-  
-  
 }
