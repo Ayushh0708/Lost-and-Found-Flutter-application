@@ -35,7 +35,8 @@ const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
 const String kLoginError = "Email or Password is worng";
 const String kSignUpError = "Email already registered";
-const String API_URL = "http://192.168.29.130:4444";
+// const String API_URL = "http://192.168.29.130:4444";
+const String API_URL = "https://lost-found-rho.vercel.app";
 
 final otpInputDecoration = InputDecoration(
   contentPadding:

@@ -111,8 +111,59 @@ class _ItemsState extends State<Items> {
             pagingController: _pagingController,
             builderDelegate: PagedChildBuilderDelegate<dynamic>(
               itemBuilder: (context, item, index){
-                return card(
-                    item['name'], "$API_URL/image/${item['images'][0]}");
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => DetailPage(
+                                    imgUrl: "$API_URL/image/${item['images'][0]}",
+                                    itemName: item['name'],
+                                    foundby: item['uploaded_by'] ?? 'No uploader',
+                                    contact: item['contact_info'] ?? 'No contact',
+                                    des: item['desc'],
+                                  ))));
+                    },
+                    child: Container(
+                        margin: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                flex: 4,
+                                child: Image.network(
+                                  "$API_URL/image/${item['images'][0]}",
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: Row(
+                                  children: [
+                                    Flexible(
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 11.0),
+                                        child: Text(
+                                          item['name'],
+                                          style: ktextStyle,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  );
               }
             ),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -122,48 +173,5 @@ class _ItemsState extends State<Items> {
             )
           )
         ));
-  }
-
-  Widget card(String name, String imageUrl) {
-    return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.symmetric(
-        horizontal: 25.0,
-        vertical: 25.0,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: 25.0,
-        vertical: 25.0,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          5.0,
-        ),
-        border: Border.all(
-          color: Colors.black,
-          width: 2.0,
-        ),
-      ),
-      child: Column(
-        children: [
-          //
-          Image.network(
-            imageUrl,
-            width: 64,
-          ),
-          //
-          SizedBox(
-            height: 12.0,
-          ),
-          //
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
