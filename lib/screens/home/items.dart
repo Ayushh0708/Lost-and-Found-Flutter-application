@@ -36,7 +36,7 @@ class _ItemsState extends State<Items> {
       fetchNewPage(pageKey);
     });
 
-    print("initState");
+    // print("initState");
   }
 
   Future getItems(int page) async {
@@ -54,9 +54,10 @@ class _ItemsState extends State<Items> {
         body: jsonEncode(body),
       );
 
-      print(body);
+      // print(body);
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
+        print(data);
         return data['items'];
       } else {
         return Future.error("Status code not 200");
@@ -84,19 +85,18 @@ class _ItemsState extends State<Items> {
     // return files;
   }
 
-  fetchNewPage(int page) async{
+  fetchNewPage(int page) async {
     try {
       final newItems = await getItems(page);
-      if(newItems.isEmpty){
+      if (newItems.isEmpty) {
         _pagingController.appendLastPage(newItems);
-      }else{
+      } else {
         _pagingController.appendPage(newItems, ++page);
       }
-      print(newItems);
+      // print(newItems);
     } catch (e) {
       _pagingController.error = e;
     }
-    
   }
 
   @override
@@ -104,74 +104,65 @@ class _ItemsState extends State<Items> {
     // widget.searchController.addListener(() {
     //   print("searchCOntroller: ${widget.searchController.text}");
     // });
-    return Padding(
-        padding: const EdgeInsets.only(top: 20.0),
-        child: Center(
-          child: PagedGridView(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<dynamic>(
-              itemBuilder: (context, item, index){
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => DetailPage(
-                                    imgUrl: "$API_URL/image/${item['images'][0]}",
-                                    itemName: item['name'],
-                                    foundby: item['uploaded_by'] ?? 'No uploader',
-                                    contact: item['contact_info'] ?? 'No contact',
-                                    des: item['desc'],
-                                  ))));
-                    },
-                    child: Container(
-                        margin: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Flexible(
-                                flex: 4,
-                                child: Image.network(
+    return Container(
+      height: MediaQuery.of(context).size.height - 180,
+      child: PagedGridView(
+          pagingController: _pagingController,
+          builderDelegate: PagedChildBuilderDelegate<dynamic>(
+              itemBuilder: (context, item, index) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: ((context) => DetailPage(
+                              imgUrl:
                                   "$API_URL/image/${item['images'][0]}",
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              Flexible(
-                                flex: 1,
-                                child: Row(
-                                  children: [
-                                    Flexible(
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 11.0),
-                                        child: Text(
-                                          item['name'],
-                                          style: ktextStyle,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                              itemName: item['name'],
+                              foundby:
+                                  item['foundBy'] ?? 'No uploader',
+                              contact:
+                                  item['phNo'] ?? 'No contact',
+                              des: item['desc'],
+                            ))));
+              },
+              child: Container(
+                  margin: const EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Expanded(
+                        //   flex: 1,
+                        //   child: Image.network(
+                        //     "$API_URL/image/${item['images'][0]}",
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        // ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
+                          child: Text(
+                            item['name'],
+                            textAlign: TextAlign.center,
+                            style: ktextStyle,
                           ),
-                        )),
-                  );
-              }
-            ),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // number of items in each row
-              mainAxisSpacing: 0.0, // spacing between rows
-              crossAxisSpacing: 0.0, // spacing between columns
-            )
-          )
-        ));
+                        )
+                      ],
+                    ),
+                  )),
+            );
+          }),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // number of items in each row
+            mainAxisSpacing: 10.0, // spacing between rows
+            crossAxisSpacing: 4.0, // spacing between columns
+          )),
+    );
   }
 }

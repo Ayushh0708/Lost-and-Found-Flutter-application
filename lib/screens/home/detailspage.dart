@@ -29,158 +29,110 @@ class DetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("${this.itemName}");
     return SafeArea(
       child: Scaffold(
-        body: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Flexible(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Flexible(
-                  flex: 2,
-                  child: Card(
-                    clipBehavior: null,
-                    child: Image.network(
-                      imgUrl!,
-                      fit: BoxFit.cover,
+          body: Column(
+        children: [
+          Expanded(
+            child: Card(
+              // Set the shape of the card using a rounded rectangle border with a 8 pixel radius
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              // Set the clip behavior of the card
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              // Define the child widgets of the card
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  // Display an image at the top of the card that fills the width of the card and has a height of 160 pixels
+                  Image.network(
+                    imgUrl!,
+                    height: 160,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  // Add a container with padding that contains the card's title, text, and buttons
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        // Display the card's title using a font size of 24 and a dark grey color
+                        Text(
+                          itemName!,
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.grey[800],
+                          ),
+                        ),
+                        // Add a space between the title and the text
+                        Container(height: 5),
+                        // Display the card's text using a font size of 15 and a light grey color
+                        Text(
+                          des!,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        Container(height: 20),
+                        Text(
+                          "Founded By: $foundby",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        Text(
+                          "Contact Number: $contact",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        // Add a row with two buttons spaced apart and aligned to the right side of the card
+                      ],
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 40.0,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Flexible(
-                    flex: 2,
-                    child: Card(
-                      elevation: 10.0,
-                      child: Column(
-                        children: [
-                          Flexible(
-                            flex: 1,
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'Item Name: ',
-                                    style: ktextStyle,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    itemName!,
-                                    style: ktextStyle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 3.0),
-                          ////
-                          Flexible(
-                            flex: 1,
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'Found By: ',
-                                    style: ktextStyle,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    foundby!,
-                                    style: ktextStyle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 3.0),
-
-                          ///
-                          Flexible(
-                            flex: 1,
-                            child: Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'Contact: ',
-                                    style: ktextStyle,
-                                    textAlign: TextAlign.start,
-                                  ),
-                                ),
-                                Flexible(
-                                  child: Text(
-                                    contact!,
-                                    style: ktextStyle,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 3.0),
-                          //
-                          Flexible(
-                            flex: 1,
-                            child: Text(
-                              des!,
-                              style: ktextStyle,
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                          const SizedBox(height: 120.0),
-                          Flexible(
-                            child: Text(
-                              "Contact Now If It Belongs To You",
-                              style: ktextStyle,
-                            ),
-                          ),
-                          const SizedBox(height: 15.0),
-                          TextButton(
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                primary: Colors.white,
-                                backgroundColor: kPrimaryColor,
-                              ),
-                              onPressed: () async {
-                                await FlutterPhoneDirectCaller.callNumber(
-                                    contact!);
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  Text(
-                                    "Call Now",
-                                    style: TextStyle(fontSize: 25.0),
-                                  ),
-                                  SizedBox(
-                                    width: 15.0,
-                                  ),
-                                  Icon(
-                                    Icons.call,
-                                    size: 25.0,
-                                  ),
-                                ],
-                              ))
-                        ],
-                      ),
-                    ),
-                  ),
-                )
-              ],
+                  // Add a small space between the card and the next widget
+                  Container(height: 5),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+          Container(
+            margin: EdgeInsets.all(8.0),
+            child: TextButton(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  primary: Colors.white,
+                  backgroundColor: kPrimaryColor,
+                ),
+                onPressed: () async {
+                  await FlutterPhoneDirectCaller.callNumber(contact!);
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Call Now",
+                      style: TextStyle(fontSize: 25.0),
+                    ),
+                    SizedBox(
+                      width: 15.0,
+                    ),
+                    Icon(
+                      Icons.call,
+                      size: 25.0,
+                    ),
+                  ],
+                )),
+          )
+        ],
+      )),
     );
   }
 }

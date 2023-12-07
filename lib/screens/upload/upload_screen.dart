@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:laf_1/constants.dart';
 import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
+
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'package:image_picker/image_picker.dart';
 import 'package:laf_1/components/coustom_bottom_nav_bar.dart';
 import 'package:laf_1/enums.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 const kTextFieldDecoration = InputDecoration(
   contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
@@ -33,11 +40,10 @@ class _UploadItemState extends State<UploadItem> {
   // FirebaseStorage storage = FirebaseStorage.instance;
   String? title;
   String? description;
-  String? uploader;
   String? contact;
+  List<String> IMAGES = [];
   final texEditingControllertitle = TextEditingController();
   final textEditingControllerdescription = TextEditingController();
-  final TextEditingControlleruploader = TextEditingController();
   final TextEditingControllercontact = TextEditingController();
   // Select and image from the gallery or take a picture with the camera
   // Then upload to Firebase Storage
@@ -51,23 +57,17 @@ class _UploadItemState extends State<UploadItem> {
               : ImageSource.gallery,
           maxWidth: 1920);
 
-      final String fileName = path.basename(pickedImage!.path);
-      File imageFile = File(pickedImage.path);
+      if (pickedImage == null) return;
+
+      // final String fileName = path.basename(pickedImage!.path);
+      // final String fileName = path.basename(pickedImage!.path);
+      // File imageFile = File(pickedImage.path);
 
       try {
-        // TODO: add image upload api
-        // Uploading the selected image with some custom meta data
-        // await storage.ref('lost_items/$fileName').putFile(
-        //     imageFile,
-        //     SettableMetadata(customMetadata: {
-        //       'item_name': title!,
-        //       'uploaded_by': uploader!,
-        //       'contact_info': contact!,
-        //       'description': description!
-        //     }));
-
         // Refresh the UI
-        setState(() {});
+        setState(() {
+          IMAGES.add(pickedImage!.path);
+        });
       } on Exception catch (error) {
         print(error);
       }
@@ -76,37 +76,81 @@ class _UploadItemState extends State<UploadItem> {
     }
   }
 
-  // TODO: Retriew the uploaded images
-  // This function is called when the app launches for the first time or when an image is uploaded or deleted
-  Future<List<Map<String, dynamic>>> _loadImages() async {
-    List<Map<String, dynamic>> files = [];
+  addLostItem() async {
+    // save all images
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+    List<String> ImageId = [];
+    for (int i = 0; i < IMAGES.length; i++) {
+      var request =
+          http.MultipartRequest('POST', Uri.parse("$API_URL/admin/image"));
 
-    // final ListResult result = await storage.ref('lost_items/').list();
-    // final List<Reference> allFiles = result.items;
+      request.headers.addAll({
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'multipart/form-data',
+      });
 
-    // await Future.forEach<Reference>(allFiles, (file) async {
-    //   final String fileUrl = await file.getDownloadURL();
-    //   final FullMetadata fileMeta = await file.getMetadata();
-    //   files.add({
-    //     "url": fileUrl,
-    //     "path": file.fullPath,
-    //     "item_name": fileMeta.customMetadata?['item_name'] ?? 'no name',
-    //     "uploaded_by": fileMeta.customMetadata?['uploaded_by'] ?? 'No uploader',
-    //     "contact_info": fileMeta.customMetadata?['contact_info'] ?? 'No info',
-    //     "description":
-    //         fileMeta.customMetadata?['description'] ?? 'No description'
-    //   });
-    // });
+      var file = File(IMAGES[i]);
+      var fileStream = http.ByteStream(file.openRead());
+      var length = await file.length();
+      var multipartFile = http.MultipartFile('data', fileStream, length,
+          filename: 'Image_$i.png');
 
-    return files;
-  }
+      request.files.add(multipartFile);
 
-  // TODO: Delete the selected image
-  // This function is called when a trash icon is pressed
-  Future<void> _delete(String ref) async {
-    // await storage.ref(ref).delete();
-    // Rebuild the UI
-    setState(() {});
+      try {
+        var response = await request.send();
+        if (response.statusCode == 200) {
+          var data = jsonDecode(await response.stream.bytesToString());
+          ImageId.add(data['msg']);
+        } else {
+          print(
+              'Failed to upload Image $i. Status code: ${response.statusCode}');
+        }
+      } catch (error) {
+        print('Error uploading Image $i: $error');
+      }
+    }
+
+    // add item to db
+    try {
+      final res = await http.post(
+        Uri.parse("$API_URL/admin/item"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $token'
+        },
+        body: jsonEncode(<String, dynamic>{
+          'name': title!,
+          'desc': description!,
+          "images": ImageId,
+          "phNo": contact!
+        }),
+      );
+      print(res.body);
+
+      if (res.statusCode == 200) {
+        // remove all images and clear everything
+        texEditingControllertitle.clear();
+        textEditingControllerdescription.clear();
+        TextEditingControllercontact.clear();
+        setState(() {
+          IMAGES.clear();
+        });
+        Fluttertoast.showToast(
+            msg: 'Item is added',
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Color(0xFFFFECDF),
+            textColor: kPrimaryColor);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   @override
@@ -129,14 +173,14 @@ class _UploadItemState extends State<UploadItem> {
                     fontWeight: FontWeight.w600),
               )),
               const SizedBox(
-                height: 20.0,
+                height: 25.0,
               ),
 
               //Item Name
               TextField(
                 controller: texEditingControllertitle,
                 keyboardType: TextInputType.text,
-                textAlign: TextAlign.center,
+                // textAlign: TextAlign.center,
                 onChanged: (value) {
                   title = value;
                 },
@@ -144,29 +188,13 @@ class _UploadItemState extends State<UploadItem> {
                     kTextFieldDecoration.copyWith(labelText: "Item Name"),
               ),
               const SizedBox(
-                height: 8.0,
-              ),
-
-              //Uploaded By
-              TextField(
-                controller: TextEditingControlleruploader,
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  uploader = value;
-
-                  //Do something with the user input.
-                },
-                decoration:
-                    kTextFieldDecoration.copyWith(labelText: 'Found By'),
-              ),
-              const SizedBox(
-                height: 8.0,
+                height: 10.0,
               ),
 
               ///contact info
               TextField(
                 controller: TextEditingControllercontact,
-                textAlign: TextAlign.center,
+                // textAlign: TextAlign.center,
                 onChanged: (value) {
                   contact = value;
 
@@ -176,13 +204,13 @@ class _UploadItemState extends State<UploadItem> {
                     kTextFieldDecoration.copyWith(labelText: 'Contact Info'),
               ),
               const SizedBox(
-                height: 8.0,
+                height: 10.0,
               ),
 
               ///description
               TextField(
                 controller: textEditingControllerdescription,
-                textAlign: TextAlign.center,
+                // textAlign: TextAlign.center,
                 onChanged: (value) {
                   description = value;
 
@@ -192,74 +220,75 @@ class _UploadItemState extends State<UploadItem> {
                     labelText: 'Item Description'),
               ),
 
-              /////////////////////////////
+              const SizedBox(
+                height: 15.0,
+              ),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              Column(
                 children: [
                   ElevatedButton.icon(
-                      onPressed: () => _upload('camera'),
-                      icon: const Icon(Icons.camera),
-                      label: const Text('camera')),
-                  ElevatedButton.icon(
-                      onPressed: () {
-                        _upload('gallery');
-                        texEditingControllertitle.clear();
-                        TextEditingControllercontact.clear();
-                        TextEditingControlleruploader.clear();
-                        textEditingControllerdescription.clear();
-                        //  setState(() {
-                        //    title ='';
-                        //    description ='';
-                        //  });
-                      },
-                      icon: const Icon(Icons.library_add),
-                      label: const Text('Gallery')),
+                      onPressed: addLostItem,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Save')),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton.icon(
+                          onPressed: () => _upload('camera'),
+                          icon: const Icon(Icons.camera),
+                          label: const Text('camera')),
+                      ElevatedButton.icon(
+                          onPressed: () {
+                            _upload('gallery');
+                          },
+                          icon: const Icon(Icons.library_add),
+                          label: const Text('Gallery')),
+                    ],
+                  ),
                 ],
               ),
-              //////////////////////////////////
-
-              /////////////////////////////
-              Expanded(
-                child: FutureBuilder(
-                  future: _loadImages(),
-                  builder: (context,
-                      AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return ListView.builder(
-                        itemCount: snapshot.data?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          final Map<String, dynamic> image =
-                              snapshot.data![index];
-
-                          return Card(
-                            margin: const EdgeInsets.symmetric(vertical: 10),
-                            child: ListTile(
-                              dense: false,
-                              leading: Image.network(image['url']),
-                              title: Text(image['item_name'],
-                                  style: const TextStyle(color: Colors.black)),
-                              subtitle: Text(image['uploaded_by'],
-                                  style: const TextStyle(color: Colors.black)),
-                              trailing: IconButton(
-                                onPressed: () => _delete(image['path']),
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
+              IMAGES.isNotEmpty
+                  ? Expanded(
+                      child: Container(
+                        margin: EdgeInsets.fromLTRB(0, 15, 0, 0),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            childAspectRatio: 1 / 2,
+                            crossAxisCount: 3, // Number of elements in each row
+                            crossAxisSpacing:
+                                8.0, // Spacing between elements horizontally
+                            mainAxisSpacing:
+                                8.0, // Spacing between elements vertically
+                          ),
+                          itemCount: IMAGES.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                              child: Column(children: [
+                                Expanded(
+                                    child: Image.file(
+                                  File(IMAGES[index]),
+                                  fit: BoxFit.cover,
+                                )),
+                                IconButton(
+                                  icon: Icon(Icons.delete),
+                                  onPressed: () {
+                                    // Add your delete logic here
+                                    // For example, you can remove the image from the list
+                                    setState(() {
+                                      IMAGES.removeAt(index);
+                                    });
+                                  },
                                 ),
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
-              ),
+                              ]),
+                            );
+                          },
+                        ),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ),

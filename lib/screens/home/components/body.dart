@@ -21,10 +21,7 @@ class _BodyState extends State<Body> {
           SizedBox(height: getProportionateScreenHeight(20)),
           HomeHeader(searchController: searchController),
           SizedBox(height: getProportionateScreenHeight(20)),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            child: Items(searchController: searchController),
-          ),
+          Items(searchController: searchController),
           SizedBox(height: getProportionateScreenHeight(20)),
         ],
       ),
