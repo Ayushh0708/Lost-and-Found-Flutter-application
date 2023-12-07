@@ -12,15 +12,19 @@ class Body extends StatefulWidget {
 }
 
 class _BodyState extends State<Body> {
+  TextEditingController searchController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
         children: [
           SizedBox(height: getProportionateScreenHeight(20)),
-          const HomeHeader(),
+          HomeHeader(searchController: searchController),
           SizedBox(height: getProportionateScreenHeight(20)),
-          const Items(),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            child: Items(searchController: searchController),
+          ),
           SizedBox(height: getProportionateScreenHeight(20)),
         ],
       ),

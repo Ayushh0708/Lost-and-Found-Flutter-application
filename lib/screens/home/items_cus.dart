@@ -24,23 +24,11 @@ const TextStyle ktextStyle = TextStyle(
     color: Colors.black87);
 
 class _ItemsState extends State<Items> {
-  final PagingController<int, dynamic> _pagingController =
-      PagingController(firstPageKey: 1);
-  static const _pageSize = 10;
+  static const _pageSize = 20;
+  final List<Map<String, dynamic>> ITEMS = [];
 
-  @override
-  void initState() {
-    super.initState();
 
-    _pagingController.addPageRequestListener((pageKey) {
-      fetchNewPage(pageKey);
-    });
-
-    print("initState");
-  }
-
-  Future getItems(int page) async {
-    // List<Map<String, dynamic>> files = [];
+  getItems(int page) async {
     try {
       Map<String, Object> body = {"page": page, "count": _pageSize};
       // if(query.isNotEmpty){
@@ -53,18 +41,17 @@ class _ItemsState extends State<Items> {
         },
         body: jsonEncode(body),
       );
-
-      print(body);
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        return data['items'];
+        // return data['items'];
       } else {
-        return Future.error("Status code not 200");
+        // return Future.error("Status code not 200");
       }
     } catch (e) {
       print(e);
-      return Future.error(e);
+      // return Future.error(e);
     }
+    setState(() {});
     // final ListResult result = await storage.ref('lost_items/').list();
     // final List<Reference> allFiles = result.items;
 
@@ -84,20 +71,13 @@ class _ItemsState extends State<Items> {
     // return files;
   }
 
-  fetchNewPage(int page) async{
-    try {
-      final newItems = await getItems(page);
-      if(newItems.isEmpty){
-        _pagingController.appendLastPage(newItems);
-      }else{
-        _pagingController.appendPage(newItems, ++page);
-      }
-      print(newItems);
-    } catch (e) {
-      _pagingController.error = e;
-    }
-    
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getItems(1);
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -107,63 +87,17 @@ class _ItemsState extends State<Items> {
     return Padding(
         padding: const EdgeInsets.only(top: 20.0),
         child: Center(
-          child: PagedGridView(
-            pagingController: _pagingController,
-            builderDelegate: PagedChildBuilderDelegate<dynamic>(
-              itemBuilder: (context, item, index){
-                return card(
-                    item['name'], "$API_URL/image/${item['images'][0]}");
-              }
-            ),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // number of items in each row
-              mainAxisSpacing: 0.0, // spacing between rows
-              crossAxisSpacing: 0.0, // spacing between columns
-            )
+          child: ListView.separated(
+            itemBuilder: (context,index){
+              return Container(
+                child: Text(ITEMS[index]['name']),
+              );
+            },
+            separatorBuilder: ((context, index) => const SizedBox(height: 10,)),
+            itemCount: ITEMS.length
           )
         ));
   }
 
-  Widget card(String name, String imageUrl) {
-    return Container(
-      width: double.maxFinite,
-      margin: EdgeInsets.symmetric(
-        horizontal: 25.0,
-        vertical: 25.0,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: 25.0,
-        vertical: 25.0,
-      ),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          5.0,
-        ),
-        border: Border.all(
-          color: Colors.black,
-          width: 2.0,
-        ),
-      ),
-      child: Column(
-        children: [
-          //
-          Image.network(
-            imageUrl,
-            width: 64,
-          ),
-          //
-          SizedBox(
-            height: 12.0,
-          ),
-          //
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 }

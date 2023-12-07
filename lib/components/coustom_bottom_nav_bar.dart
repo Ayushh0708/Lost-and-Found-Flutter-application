@@ -67,7 +67,8 @@ class CustomBottomNavBar extends StatelessWidget {
                       : inActiveIconColor,
                 ),
                 onPressed: () =>
-                    Navigator.pushNamed(context, SignInScreen.routeName),
+                // TODO: Make a profile page
+                  Navigator.pushNamed(context, SignInScreen.routeName),
               ),
             ],
           )),

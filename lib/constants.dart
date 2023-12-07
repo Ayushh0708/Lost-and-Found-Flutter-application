@@ -34,6 +34,7 @@ const String kNamelNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
 const String kLoginError = "Email or Password is worng";
+const String kSignUpError = "Email already registered";
 const String API_URL = "http://192.168.29.130:4444";
 
 final otpInputDecoration = InputDecoration(

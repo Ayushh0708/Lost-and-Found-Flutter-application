@@ -7,6 +7,10 @@ import 'package:laf_1/components/form_error.dart';
 import 'package:laf_1/screens/home/home_screen.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../constants.dart';
@@ -49,13 +53,34 @@ class _SignUpFormState extends State<SignUpForm> {
     }
   }
 
-  addData(email,password) {
+  signUp(String name,String email,String password) async {
     // TODO: add api
-    print("$email - $password");
-    // Map<String, dynamic> demoData = {"name": fullName, "email": email};
-    // CollectionReference collectionReference =
-    //     FirebaseFirestore.instance.collection("students");
-    // collectionReference.add(demoData);
+    print("$name - $email - $password");
+    try {
+      // print("$email - $password - $API_URL/user/login");
+      final res = await http.post(
+        Uri.parse("$API_URL/user/register"),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{
+          'email': email,
+          'password': password
+        }),
+      );
+      if(res.statusCode == 200){
+        final data = jsonDecode(res.body);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString("token", data['user']['token']);
+        prefs.setString("name", data['user']['name']);
+        return true;
+      }else{
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   @override
@@ -76,16 +101,15 @@ class _SignUpFormState extends State<SignUpForm> {
           DefaultButton(
             text: "Sign Up",
             press: () async {
+              removeError(error: kSignUpError);
               try {
-                addData("admin@gmail.com","123456789");
-
                 if (_formKey.currentState!.validate()) {
-                  // if all are valid then go to success screen
-                  // UserCredential newUser =
-                  //     await _auth.createUserWithEmailAndPassword(
-                  //         email: email!, password: password!);
-                  addData(email,password);
-                  Navigator.pushNamed(context, HomeScreen.routeName);
+                  final res = await signUp(fullName!,email!,password!);
+                  if(res == true){
+                    Navigator.pushNamed(context, HomeScreen.routeName);
+                  }else{
+                    addError(error: kSignUpError);
+                  }
                 }
               } catch (e) {
                 print(e);
