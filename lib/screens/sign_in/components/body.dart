@@ -28,17 +28,6 @@ class Body extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.screenHeight * 0.07),
                   const SignForm(),
-                  // SizedBox(height: SizeConfig.screenHeight * 0.01),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     const Text("Or Sign In With  "),
-                  //     SocalCard(
-                  //       icon: "assets/icons/google-icon.svg",
-                  //       press: () {},
-                  //     ),
-                  //   ],
-                  // ),
                   SizedBox(height: getProportionateScreenHeight(20)),
                   const NoAccountText(),
                 ],

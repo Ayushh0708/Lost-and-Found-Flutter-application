@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:laf_1/screens/home/home_screen.dart';
-import 'package:laf_1/screens/sign_in/sign_in_screen.dart';
 import 'package:laf_1/screens/upload/upload_screen.dart';
+import 'package:laf_1/screens/profile/profile_screen.dart';
+
 
 import '../constants.dart';
 import '../enums.dart';
@@ -73,7 +74,7 @@ class CustomBottomNavBar extends StatelessWidget {
                 ),
                 onPressed: () =>
                 // TODO: Make a profile page
-                  Navigator.pushNamed(context, SignInScreen.routeName),
+                  Navigator.pushNamed(context, ProfileItem.routeName),
               ),
             ],
           )),

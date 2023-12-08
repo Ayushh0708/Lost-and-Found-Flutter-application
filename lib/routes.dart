@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:laf_1/screens/profile/profile_screen.dart';
 import 'package:laf_1/screens/upload/upload_screen.dart';
 import 'package:laf_1/screens/forgot_password/forgot_password_screen.dart';
 import 'package:laf_1/screens/home/home_screen.dart';
@@ -18,4 +19,5 @@ final Map<String, WidgetBuilder> routes = {
   SignUpScreen.routeName: (context) => const SignUpScreen(),
   HomeScreen.routeName: (context) => const HomeScreen(),
   UploadItem.routeName: (context) => const UploadItem(),
+  ProfileItem.routeName: (context) => const ProfileItem(),
 };

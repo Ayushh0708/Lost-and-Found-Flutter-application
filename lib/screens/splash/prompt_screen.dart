@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class PromptScreen extends StatefulWidget {
-  static String routeName = "/home";
+  static String routeName = "/prompt";
 
   const PromptScreen({Key? key}) : super(key: key);
 
@@ -15,21 +15,21 @@ class PromptScreen extends StatefulWidget {
 }
 
 class _PromptScreenState extends State<PromptScreen> {
-  getScreen() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token = prefs.getString("token");
-    if(token == null){
-      print("token: nf");
-    }else{
-      print("token: $token");
-      Navigator.pushNamed(context, HomeScreen.routeName);
-    }
-  }
+  // getScreen() async{
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? token = prefs.getString("token");
+  //   if(token == null){
+  //     print("token: nf");
+  //   }else{
+  //     print("token: $token");
+  //     Navigator.pushNamed(context, HomeScreen.routeName);
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    getScreen();
+    // getScreen();
   }
   @override
   Widget build(BuildContext context) {

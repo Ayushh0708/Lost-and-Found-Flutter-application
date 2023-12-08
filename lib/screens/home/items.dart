@@ -5,7 +5,6 @@ import 'package:laf_1/constants.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:laf_1/screens/home/detailspage.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'components/gesturebox.dart';
 import 'package:http/http.dart' as http;
 
 class Items extends StatefulWidget {
@@ -57,7 +56,7 @@ class _ItemsState extends State<Items> {
       // print(body);
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
-        print(data);
+        // print(data);
         return data['items'];
       } else {
         return Future.error("Status code not 200");
@@ -138,13 +137,13 @@ class _ItemsState extends State<Items> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Expanded(
-                        //   flex: 1,
-                        //   child: Image.network(
-                        //     "$API_URL/image/${item['images'][0]}",
-                        //     fit: BoxFit.cover,
-                        //   ),
-                        // ),
+                        Expanded(
+                          flex: 1,
+                          child: Image.network(
+                            "$API_URL/image/${item['images'][0]}",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 4, 0, 4),
                           child: Text(
