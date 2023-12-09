@@ -27,4 +27,11 @@ class _BodyState extends State<Body> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    searchController.dispose();
+    super.dispose();
+  }
 }

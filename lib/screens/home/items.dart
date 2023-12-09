@@ -26,6 +26,7 @@ class _ItemsState extends State<Items> {
   final PagingController<int, dynamic> _pagingController =
       PagingController(firstPageKey: 1);
   static const _pageSize = 10;
+  String query = "";
 
   @override
   void initState() {
@@ -42,9 +43,9 @@ class _ItemsState extends State<Items> {
     // List<Map<String, dynamic>> files = [];
     try {
       Map<String, Object> body = {"page": page, "count": _pageSize};
-      // if(query.isNotEmpty){
-      //   body['query'] = query;
-      // }
+      if(query.isNotEmpty){
+        body['query'] = query;
+      }
       final res = await http.post(
         Uri.parse("$API_URL/item/search"),
         headers: <String, String>{
@@ -65,23 +66,6 @@ class _ItemsState extends State<Items> {
       print(e);
       return Future.error(e);
     }
-    // final ListResult result = await storage.ref('lost_items/').list();
-    // final List<Reference> allFiles = result.items;
-
-    // await Future.forEach<Reference>(allFiles, (file) async {
-    //   final String fileUrl = await file.getDownloadURL();
-    //   final FullMetadata fileMeta = await file.getMetadata();
-    //   files.add({
-    //     "url": fileUrl,
-    //     "item_name": fileMeta.customMetadata?['item_name'] ?? 'no name',
-    //     "uploaded_by": fileMeta.customMetadata?['uploaded_by'] ?? 'No uploader',
-    //     "contact_info": fileMeta.customMetadata?['contact_info'] ?? 'No info',
-    //     "description":
-    //         fileMeta.customMetadata?['description'] ?? 'No description'
-    //   });
-    // });
-
-    // return files;
   }
 
   fetchNewPage(int page) async {
@@ -100,9 +84,11 @@ class _ItemsState extends State<Items> {
 
   @override
   Widget build(BuildContext context) {
-    // widget.searchController.addListener(() {
-    //   print("searchCOntroller: ${widget.searchController.text}");
-    // });
+    widget.searchController.addListener(() {
+      // print("searchCOntroller: ${widget.searchController.text}");
+      query = widget.searchController.text;
+      _pagingController.refresh();
+    });
     return Container(
       height: MediaQuery.of(context).size.height - 180,
       child: PagedGridView(

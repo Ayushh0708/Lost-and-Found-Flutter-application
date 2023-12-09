@@ -30,8 +30,8 @@ class _HomeHeaderState extends State<HomeHeader> {
               borderRadius: BorderRadius.circular(15),
             ),
             child: TextField(
-              onChanged: (value) => print("searchBox: $value"),
-              controller: widget.searchController,
+              // onChanged: (value) => print("searchBox: $value"),
+              onSubmitted: (value) => widget.searchController.text = value,
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.symmetric(
                       horizontal: getProportionateScreenWidth(20),

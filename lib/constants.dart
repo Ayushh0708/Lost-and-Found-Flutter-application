@@ -28,15 +28,17 @@ final RegExp emailValidatorRegExp =
 const String kEmailNullError = "Please Enter your email";
 const String kInvalidEmailError = "Please Enter Valid Email";
 const String kPassNullError = "Please Enter your password";
+const String kOTPNullError = "Please Enter your OTP";
 const String kShortPassError = "Password is too short";
+const String kShortOTPError = "OTP is of lenght 6";
 const String kMatchPassError = "Passwords don't match";
 const String kNamelNullError = "Please Enter your name";
 const String kPhoneNumberNullError = "Please Enter your phone number";
 const String kAddressNullError = "Please Enter your address";
 const String kLoginError = "Email or Password is worng";
 const String kSignUpError = "Email already registered";
-// const String API_URL = "http://192.168.29.130:4444";
-const String API_URL = "https://lost-found-rho.vercel.app";
+const String API_URL = "http://192.168.29.130:4444";
+// const String API_URL = "https://lost-found-rho.vercel.app";
 
 final otpInputDecoration = InputDecoration(
   contentPadding:
