@@ -24,7 +24,7 @@ class Body extends StatelessWidget {
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: Column(
             children: [
-              SizedBox(height: SizeConfig.screenHeight * 0.04),
+              SizedBox(height: SizeConfig.screenHeight * 0.1),
               Text(
                 "Forgot Password",
                 style: TextStyle(
@@ -226,7 +226,8 @@ class _ForgotPassFormState extends State<ForgotPassForm> {
                 SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: 
+                  ElevatedButton(
                     child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 15),
                         child: Text("Continue")),

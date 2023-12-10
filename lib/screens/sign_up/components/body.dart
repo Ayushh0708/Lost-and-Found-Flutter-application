@@ -23,9 +23,10 @@ class Body extends StatelessWidget {
                   Text(
                     "Register Account",
                     style: TextStyle(
-                      color: const Color.fromARGB(255, 162, 58, 232),
+                      // color: const Color.fromARGB(255, 162, 58, 232),
                       fontSize: getProportionateScreenWidth(28),
                       fontWeight: FontWeight.bold,
+                      color: Colors.black
                     ),
                   ),
                   const Padding(

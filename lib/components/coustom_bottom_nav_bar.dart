@@ -22,7 +22,7 @@ class CustomBottomNavBar extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Color.fromRGBO(66, 66, 66, 1),
         boxShadow: [
           BoxShadow(
             offset: const Offset(0, -15),
@@ -30,10 +30,10 @@ class CustomBottomNavBar extends StatelessWidget {
             color: const Color(0xFFDADADA).withOpacity(0.15),
           ),
         ],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        ),
+        // borderRadius: const BorderRadius.only(
+        //   topLeft: Radius.circular(40),
+        //   topRight: Radius.circular(40),
+        // ),
       ),
       child: SafeArea(
           top: false,
@@ -52,7 +52,7 @@ class CustomBottomNavBar extends StatelessWidget {
               ),
               IconButton(
                 icon: SvgPicture.asset(
-                  "assets/icons/Heart Icon.svg",
+                  "assets/icons/upload.svg",
                   color: MenuState.favourite == selectedMenu
                       ? kPrimaryColor
                       : inActiveIconColor
@@ -61,10 +61,10 @@ class CustomBottomNavBar extends StatelessWidget {
                   Navigator.pushNamed(context, UploadItem.routeName);
                 },
               ),
-              IconButton(
-                icon: SvgPicture.asset("assets/icons/Chat bubble Icon.svg"),
-                onPressed: () {},
-              ),
+              // IconButton(
+              //   icon: SvgPicture.asset("assets/icons/Chat bubble Icon.svg"),
+              //   onPressed: () {},
+              // ),
               IconButton(
                 icon: SvgPicture.asset(
                   "assets/icons/User Icon.svg",

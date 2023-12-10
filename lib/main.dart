@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:laf_1/routes.dart';
+import 'package:laf_1/screens/forgot_password/forgot_password_screen.dart';
 import 'package:laf_1/screens/home/home_screen.dart';
+import 'package:laf_1/screens/sign_in/sign_in_screen.dart';
+import 'package:laf_1/screens/sign_up/sign_up_screen.dart';
 import 'package:laf_1/screens/splash/prompt_screen.dart';
 import 'package:laf_1/size_config.dart';
 // import 'package:laf_1/screens/profile/profile_screen.dart';
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
       // home: PromptScreen(),
       initialRoute: token == null ? PromptScreen.routeName : HomeScreen.routeName,
       // We use routeName so that we dont need to remember the name
-      // initialRoute: SplashScreen.routeName,
+      // initialRoute: ForgotPasswordScreen.routeName,
       routes: routes,
     );
   }

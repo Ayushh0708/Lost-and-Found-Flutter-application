@@ -4,6 +4,7 @@ import 'package:laf_1/components/custom_surfix_icon.dart';
 import 'package:laf_1/components/form_error.dart';
 import 'package:laf_1/helper/keyboard.dart';
 import 'package:laf_1/screens/forgot_password/forgot_password_screen.dart';
+import 'package:laf_1/screens/home/home_screen.dart';
 import 'package:laf_1/screens/login_success/login_success_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -47,7 +48,7 @@ class _SignFormState extends State<SignForm> {
     }
   }
 
-  Future<bool> login(String email,String password) async {
+  Future<bool> login(String email, String password) async {
     try {
       // print("$email - $password - $API_URL/user/login");
       final res = await http.post(
@@ -55,18 +56,17 @@ class _SignFormState extends State<SignForm> {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(<String, String>{
-          'email': email,
-          'password': password
-        }),
+        body:
+            jsonEncode(<String, String>{'email': email, 'password': password}),
       );
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("token", data['user']['token']);
         prefs.setString("name", data['user']['name']);
+        prefs.setString("username", data['user']['username']);
         return true;
-      }else{
+      } else {
         return false;
       }
     } catch (e) {
@@ -75,9 +75,10 @@ class _SignFormState extends State<SignForm> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
+    bool disableButton = false;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -111,26 +112,43 @@ class _SignFormState extends State<SignForm> {
           ),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
-          DefaultButton(
-            text: "Sign In",
-            press: () async {
-              try {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
-                  KeyboardUtil.hideKeyboard(context);
-                  removeError(error: kLoginError);
-                  final res = await login(email!,password!);
-                  if(res == true){
-                    Navigator.pushNamed(context, LoginSuccessScreen.routeName);
-                  }else{
-                    addError(error: kLoginError);
-                  }
-                }
-              } catch (e) {
-                print(e);
-              }
-            },
+          ElevatedButton(
+            child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  width: SizeConfig.screenWidth,
+                  child: Text("Sign In",textAlign: TextAlign.center,)),
+            onPressed: disableButton
+                ? null
+                : () async {
+                    try {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        KeyboardUtil.hideKeyboard(context);
+                        setState(() {
+                          errors.remove(kLoginError);
+                          disableButton = true;
+                        });
+                        final res = await login(email!, password!);
+                        if (res == true) {
+                          Navigator.pushNamed(context, HomeScreen.routeName);
+                        } else {
+                          setState(() {
+                            errors.add(kLoginError);
+                            disableButton = false;
+                          });
+                        }
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
           ),
+          // DefaultButton(
+          //   text: "Sign In",
+          //   press: () async {
+
+          //   },
+          // ),
         ],
       ),
     );

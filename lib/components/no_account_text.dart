@@ -20,7 +20,7 @@ class NoAccountText extends StatelessWidget {
             "Create an account",
             style: TextStyle(
                 fontSize: getProportionateScreenWidth(16),
-                color: kPrimaryColor),
+                color: Color.fromRGBO(238, 238, 238, 1)),
           ),
         ),
       ],

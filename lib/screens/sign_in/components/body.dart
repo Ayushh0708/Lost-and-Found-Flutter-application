@@ -21,9 +21,10 @@ class Body extends StatelessWidget {
                   Text(
                     "Sign In To Search",
                     style: TextStyle(
-                      color: const Color.fromARGB(255, 162, 58, 232),
                       fontSize: getProportionateScreenWidth(28),
                       fontWeight: FontWeight.bold,
+                      color: Colors.black
+
                     ),
                   ),
                   SizedBox(height: SizeConfig.screenHeight * 0.07),

@@ -20,38 +20,29 @@ class _BodyState extends State<Body> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: SafeArea(
-        child: SizedBox(
-          width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.only(top: 150.0),
-            child: Column(
-              children: <Widget>[
-                Image.asset("assets/images/splash_screen.gif",
-                    height: 400, width: double.infinity),
-                Flexible(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: getProportionateScreenWidth(20)),
-                    child: Column(
-                      children: <Widget>[
-                        DefaultButton(
-                          text: "Start Searching Your Lost Items",
-                          press: () {
-                            Navigator.pushNamed(
-                                context, SignInScreen.routeName);
-                          },
-                        ),
-                        const Spacer(),
-                      ],
-                    ),
-                  ),
-                ),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20.0,bottom: 50),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Image.asset("assets/images/logo.png",
+                height: 100, width: double.infinity),
+            Column(
+              children: [
+                Image.asset("assets/images/splash.png",
+                    height: 200, width: double.infinity),
+                    Text("We are searching for\nyour lost items",style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),textAlign: TextAlign.center,)
               ],
             ),
-          ),
+            Image.asset("assets/images/upes.png",
+                height: 50,
+                width: double.infinity,
+                ),
+          ],
         ),
       ),
     );

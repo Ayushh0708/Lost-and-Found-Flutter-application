@@ -24,9 +24,9 @@ class _HomeHeaderState extends State<HomeHeader> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            width: SizeConfig.screenWidth * 0.6,
+            width: SizeConfig.screenWidth * 0.88,
             decoration: BoxDecoration(
-              color: kSecondaryColor.withOpacity(0.1),
+              color: kSecondaryColor.withOpacity(0.9),
               borderRadius: BorderRadius.circular(15),
             ),
             child: TextField(
@@ -43,11 +43,11 @@ class _HomeHeaderState extends State<HomeHeader> {
                   prefixIcon: const Icon(Icons.search)),
             ),
           ),
-          IconBtnWithCounter(
-            svgSrc: "assets/icons/Bell.svg",
-            numOfitem: 3,
-            press: () {},
-          ),
+          // IconBtnWithCounter(
+          //   svgSrc: "assets/icons/Bell.svg",
+          //   numOfitem: 3,
+          //   press: () {},
+          // ),
         ],
       ),
     );

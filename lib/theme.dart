@@ -4,7 +4,7 @@ import 'constants.dart';
 
 ThemeData theme() {
   return ThemeData(
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: Color.fromRGBO(255, 158, 18, .9),
     fontFamily: "Muli",
     appBarTheme: appBarTheme(),
     textTheme: textTheme(),
@@ -20,9 +20,11 @@ InputDecorationTheme inputDecorationTheme() {
     gapPadding: 10,
   );
   return InputDecorationTheme(
-  
     floatingLabelBehavior: FloatingLabelBehavior.always,
     contentPadding: const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+    labelStyle: TextStyle(
+      color: Colors.white70
+    ),
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder,
     border: outlineInputBorder,

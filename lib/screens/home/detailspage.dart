@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:laf_1/constants.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 TextStyle ktextStyle = GoogleFonts.lato(
     textStyle: const TextStyle(
@@ -13,18 +14,18 @@ TextStyle ktextStyle = GoogleFonts.lato(
 
 // ignore: must_be_immutable
 class DetailPage extends StatelessWidget {
-  String? imgUrl;
-  String? itemName;
-  String? foundby;
-  String? contact;
-  String? des;
+  List imgUrls;
+  String itemName;
+  String foundby;
+  String contact;
+  String des;
   DetailPage(
       {Key? key,
-      this.imgUrl,
-      this.itemName,
-      this.foundby,
-      this.contact,
-      this.des})
+      required this.imgUrls,
+      required this.itemName,
+      required this.foundby,
+      required this.contact,
+      required this.des})
       : super(key: key);
 
   @override
@@ -47,12 +48,35 @@ class DetailPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   // Display an image at the top of the card that fills the width of the card and has a height of 160 pixels
-                  Image.network(
-                    imgUrl!,
-                    height: 160,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
+                  CarouselSlider(
+                    options: CarouselOptions(height: 300.0),
+                    items: imgUrls.map((url) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(color: Colors.amber),
+                            // child: Image.network()
+                            child: Expanded(
+                          flex: 1,
+                          child: Image.network(
+                            "$API_URL/image/$url",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  )
+,
+                  // Image.network(
+                  //   ,
+                  //   height: 160,
+                  //   width: double.infinity,
+                  //   fit: BoxFit.cover,
+                  // ),
                   // Add a container with padding that contains the card's title, text, and buttons
                   Container(
                     padding: const EdgeInsets.fromLTRB(15, 15, 15, 0),

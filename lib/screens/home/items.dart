@@ -90,6 +90,7 @@ class _ItemsState extends State<Items> {
       _pagingController.refresh();
     });
     return Container(
+      padding: EdgeInsets.symmetric(horizontal: 5),
       height: MediaQuery.of(context).size.height - 180,
       child: PagedGridView(
           pagingController: _pagingController,
@@ -101,13 +102,10 @@ class _ItemsState extends State<Items> {
                     context,
                     MaterialPageRoute(
                         builder: ((context) => DetailPage(
-                              imgUrl:
-                                  "$API_URL/image/${item['images'][0]}",
+                              imgUrls:item['images'],
                               itemName: item['name'],
-                              foundby:
-                                  item['foundBy'] ?? 'No uploader',
-                              contact:
-                                  item['phNo'] ?? 'No contact',
+                              foundby:item['foundBy'] ?? 'No uploader',
+                              contact: item['phNo'] ?? 'No contact',
                               des: item['desc'],
                             ))));
               },

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:laf_1/components/custom_surfix_icon.dart';
 import 'package:laf_1/components/default_button.dart';
 import 'package:laf_1/components/form_error.dart';
+import 'package:laf_1/helper/keyboard.dart';
 import 'package:laf_1/screens/home/home_screen.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -53,11 +54,9 @@ class _SignUpFormState extends State<SignUpForm> {
     }
   }
 
-  signUp(String name,String email,String password) async {
+  signUp(String name, String email, String password) async {
     // TODO: add api
-    print("$name - $email - $password");
     try {
-      // print("$email - $password - $API_URL/user/login");
       final res = await http.post(
         Uri.parse("$API_URL/user/register"),
         headers: <String, String>{
@@ -65,16 +64,18 @@ class _SignUpFormState extends State<SignUpForm> {
         },
         body: jsonEncode(<String, String>{
           'email': email,
-          'password': password
+          'password': password,
+          'name': name
         }),
       );
-      if(res.statusCode == 200){
+      if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString("token", data['user']['token']);
         prefs.setString("name", data['user']['name']);
+        prefs.setString("username", data['user']['username']);
         return true;
-      }else{
+      } else {
         return false;
       }
     } catch (e) {
@@ -85,6 +86,8 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    bool disableButton = false;
+
     return Form(
       key: _formKey,
       child: Column(
@@ -98,23 +101,40 @@ class _SignUpFormState extends State<SignUpForm> {
           buildConformPassFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(30)),
-          DefaultButton(
-            text: "Sign Up",
-            press: () async {
-              removeError(error: kSignUpError);
-              try {
-                if (_formKey.currentState!.validate()) {
-                  final res = await signUp(fullName!,email!,password!);
-                  if(res == true){
-                    Navigator.pushNamed(context, HomeScreen.routeName);
-                  }else{
-                    addError(error: kSignUpError);
-                  }
-                }
-              } catch (e) {
-                print(e);
-              }
-            },
+          ElevatedButton(
+            child: Container(
+                padding: EdgeInsets.symmetric(vertical: 15),
+                width: SizeConfig.screenWidth,
+                child: Text(
+                  "Sign Up",
+                  textAlign: TextAlign.center,
+                )),
+            onPressed: disableButton
+                ? null
+                : () async {
+                    try {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
+                        KeyboardUtil.hideKeyboard(context);
+                        setState(() {
+                          errors.remove(kSignUpError);
+                          disableButton = true;
+                        });
+
+                        final res = await signUp(fullName!, email!, password!);
+                        if (res == true) {
+                          Navigator.pushNamed(context, HomeScreen.routeName);
+                        } else {
+                          setState(() {
+                            errors.add(kSignUpError);
+                            disableButton = false;
+                          });
+                        }
+                      }
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
           ),
         ],
       ),

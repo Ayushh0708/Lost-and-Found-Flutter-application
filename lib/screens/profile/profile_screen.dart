@@ -24,7 +24,7 @@ class _ProfileItemState extends State<ProfileItem> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       name = prefs.getString("name") ?? '-';
-      email = prefs.getString("email") ?? '-';
+      email = prefs.getString("username") ?? '-';
     });
     
   }
@@ -51,7 +51,7 @@ class _ProfileItemState extends State<ProfileItem> {
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  color: Colors.grey,
+                  color: Colors.amber,
                   height: coverHeight,
                   width: double.infinity,
                 ),
